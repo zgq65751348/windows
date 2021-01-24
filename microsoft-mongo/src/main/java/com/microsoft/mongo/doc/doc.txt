@@ -1,0 +1,43 @@
+ mongoTemplate.insert(Object);
+
+
+ Query query=new Query(Criteria.where("_id").is(id));
+ mongoTemplate.remove(query,AutomaticAlarm.class);
+
+ Query query=new Query(Criteria.where("_id").is(id));
+ Update update = Update.update("要更新的字段", "更新的值");
+ mongoTemplate.updateFirst(query, update, Object.class);
+
+ 1.查找所有
+
+ 　　mongoTemplate.findAll(Object.class);
+
+ 2.条件查询（具体某个字段的值）
+
+ 　　Query query=new Query(Criteria.where("字段1").is("值1"));
+ 　　mongoTemplate.find(query, Object.class);
+
+ 3.条件查询（大于小于）
+
+ 　　Criteria criteria = Criteria.where("字段").gte(某个值).lte(某个值);
+ 　  Query query = new Query(criteria);
+ 　　mongoTemplate.find(query, Object.class);
+
+ 4.模糊查询
+
+ 　　Pattern pattern = Pattern.compile("^.*" + searchKey + ".*$");//这里时使用的是正则匹配,searchKey是关键字，接口传参，也可以自己定义。
+     Criteria criteria = Criteria.where("_id").regex(pattern);
+ 　  mongoTemplate.find(query, Object.class);　
+
+ 5.分页查询
+
+     Query query = new Query();
+     query.skip("跳过的数据条数").limit("一页的数据条数");
+     mongoTemplate.find(query, Object.class);
+
+ 6.聚合查询
+     Aggregation aggregation1 = Aggregation.newAggregation(Aggregation.group("sex").count().as("peopleCount"));//这里的聚合条件由自己定义
+     AggregationResults<BasicDBObject> outputTypeCount1 = mongoTemplate.aggregate(aggregation1, "User", BasicDBObject.class);//取出的结果需要自行进行处理，比如可以用getMappedResults来转换
+
+     同时在项目启动类SpringBootMainApplication上添加一个注解@EnableMongoPlus
+
