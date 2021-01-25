@@ -22,6 +22,7 @@
         <module>microsoft-admin</module>
         <module>microsoft-gateway</module>
         <module>microsoft-webflux</module>
+        <module>microsoft-redis</module>
     </modules>
 
 

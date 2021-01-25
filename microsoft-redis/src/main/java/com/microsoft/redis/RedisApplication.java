@@ -1,8 +1,7 @@
-package com.microsoft.webflux.controller;
+package com.microsoft.redis;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Copyright 2013-2033 Estee Lauder(zgq65751348@gmail.com).
@@ -21,12 +20,13 @@ import reactor.core.publisher.Mono;
  *
  * @Auth Estee Lauder
  * @See {@code  }.
- * @Date 2021/1/25  11:11
+ * @Date 2021/1/25  15:00
  * </p>
  */
-@RestController
-@RequestMapping(value = "/system")
-public class WebFluxController {
+@SpringBootApplication
+public class RedisApplication {
 
-
+    public static void main(String[] args) {
+        SpringApplication.run(RedisApplication.class,args);
+    }
 }
