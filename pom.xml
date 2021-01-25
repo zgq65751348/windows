@@ -21,6 +21,7 @@
         <module>microsoft-mongo</module>
         <module>microsoft-admin</module>
         <module>microsoft-gateway</module>
+        <module>microsoft-webflux</module>
     </modules>
 
 
