@@ -1,16 +1,16 @@
 package com.microsoft.redis.controller;
 
-import com.microsoft.redis.main.Entity;
-import com.microsoft.redis.service.DataService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.microsoft.redis.main.Paging;
+import com.microsoft.redis.main.UserInfo;
+import com.microsoft.redis.service.RankingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Copyright 2013-2033 Estee Lauder(zgq65751348@gmail.com).
@@ -37,33 +37,20 @@ import java.util.Set;
 public class MainController {
 
     @Autowired
-    private DataService dataService;
+    private RankingService rankingService;
 
-    @RequestMapping(value = "/batch")
-    public void  batchAdd(){
-        dataService.batchAdd();
+    @GetMapping("/add")
+    public void run(){
+        rankingService.batch();
     }
 
-    @RequestMapping(value = "/list")
-    public Set<Entity> list(){
-        Set<Entity> entitySet = new HashSet<>();
-        Set<ZSetOperations.TypedTuple<Entity>> typedTupleSet = dataService.list();
-        if(!CollectionUtils.isEmpty(typedTupleSet)){
-            typedTupleSet.forEach(entityTypedTuple -> {
-                entitySet.add(entityTypedTuple.getValue());
-            });
-        }
-        return entitySet;
+    @PostMapping("/get")
+    public List<Map<String, Object>> get(@RequestBody Paging paging){
+        return rankingService.getRankList(paging);
     }
 
-    @GetMapping("/cardinal")
-    public long cardinal(){
-        return  dataService.cardinal();
+    @PutMapping("/create")
+    public  boolean add(@RequestBody UserInfo userInfo) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        return rankingService.add(userInfo);
     }
-
-    @GetMapping(value = "/count")
-    public long totalCount(){
-        return dataService.totalCount(0,5);
-    }
-
 }
