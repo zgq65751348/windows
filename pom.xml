@@ -23,6 +23,7 @@
         <module>microsoft-gateway</module>
         <module>microsoft-webflux</module>
         <module>microsoft-redis</module>
+        <module>microsoft--oauth2</module>
     </modules>
 
 

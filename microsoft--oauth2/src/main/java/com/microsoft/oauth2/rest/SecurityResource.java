@@ -1,0 +1,93 @@
+package com.microsoft.oauth2.rest;
+
+import com.microsoft.oauth2.dao.PermissionDAO;
+import com.microsoft.oauth2.dao.RoleDAO;
+import com.microsoft.oauth2.dao.RolePermissionDAO;
+import com.microsoft.oauth2.dao.UserRoleDAO;
+import com.microsoft.oauth2.entity.Permission;
+import com.microsoft.oauth2.entity.RolePermission;
+import com.microsoft.oauth2.entity.UserRole;
+import com.microsoft.oauth2.service.SecurityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.UUID;
+
+/**
+ * @author keets
+ * @date 2017/10/15
+ */
+@Path("/")
+public class SecurityResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityResource.class);
+
+    @Autowired
+    private SecurityService securityService;
+
+    @Autowired
+    private UserRoleDAO userRoleDAO;
+
+    @Autowired
+    private PermissionDAO permissionDAO;
+
+    @Autowired
+    private RoleDAO roleDAO;
+
+    @Autowired
+    private RolePermissionDAO rolePermissionDAO;
+
+    @POST
+    @Path("permission")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createPermission(Permission permission) {
+        permission.setId(UUID.randomUUID());
+        permissionDAO.insert(permission);
+        return Response.ok(permission.getId()).build();
+    }
+
+    @GET
+    @Path("permissions/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listPermission(@PathParam("id") String id) {
+        UUID pId = UUID.fromString(id);
+        Permission permission = permissionDAO.selectById(pId);
+        return Response.ok(permission).build();
+    }
+
+    @POST
+    @Path("/role-permission")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createRolePermission(RolePermission rolePermission) {
+        rolePermissionDAO.insert(rolePermission);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("role")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listRoles() {
+        return Response.ok(roleDAO.selectAll()).build();
+    }
+
+    @GET
+    @Path("permissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listPermissions() {
+        return Response.ok(permissionDAO.selectAll()).build();
+    }
+
+    @POST
+    @Path("user-role")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createUserRole(UserRole userRole) {
+        userRole.setUserId(UUID.randomUUID());
+        userRoleDAO.insertUtRole(userRole);
+        return Response.ok().build();
+    }
+}
